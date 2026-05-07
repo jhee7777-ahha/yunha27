@@ -26,7 +26,8 @@ import {
   Lightbulb,
   Compass,
   LayoutGrid,
-  CheckCircle2
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { UNIVERSITIES, University } from './types';
 
@@ -72,6 +73,7 @@ const useCurrentTime = () => {
 
 export default function Home() {
   const times = useCurrentTime();
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'my-list' | 'guide'>('dashboard');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUniv, setSelectedUniv] = useState<University | null>(null);
   const [trackedSchools, setTrackedSchools] = useState<string[]>([]);
@@ -106,11 +108,11 @@ export default function Home() {
   if (!isMounted) return <div className="min-h-screen bg-[#F8FAFC]" />;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans scroll-smooth">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Upper Navigation / Time Bar */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
               <TrendingUp size={24} />
             </div>
@@ -130,166 +132,186 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 py-8 space-y-24">
-        
-        {/* Section 1: Master Dashboard */}
-        <section className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <h2 className="text-4xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-                <LayoutGrid className="text-indigo-600" size={32} />
-                University Board
-              </h2>
-              <p className="text-slate-500 mt-2 text-lg">15개 타겟 대학의 통합 정보를 한눈에 비교하고 관리하세요.</p>
-            </div>
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-              <input 
-                type="text" 
-                placeholder="학교명, 전공, 지역 검색..."
-                className="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        {/* Tab Switcher (Optimized to 3 Tabs) */}
+        <div className="flex bg-slate-100/80 backdrop-blur-sm p-1.5 rounded-2xl w-fit mb-10 border border-slate-200 shadow-sm">
+          <TabButton 
+            active={activeTab === 'dashboard'} 
+            onClick={() => setActiveTab('dashboard')}
+            label="Dashboard"
+            icon={<LayoutGrid size={18} />}
+          />
+          <TabButton 
+            active={activeTab === 'my-list'} 
+            onClick={() => setActiveTab('my-list')}
+            label={`My Shortlist (${trackedSchools.length})`}
+            icon={<Star size={18} className={trackedSchools.length > 0 ? "text-amber-500 fill-amber-500" : ""} />}
+          />
+          <TabButton 
+            active={activeTab === 'guide'} 
+            onClick={() => setActiveTab('guide')}
+            label="Prep Guide"
+            icon={<Lightbulb size={18} />}
+          />
+        </div>
 
-          <div className="grid grid-cols-1 gap-6">
-             {filteredUniversities.map((univ) => (
-               <UnifiedUniversityCard 
-                 key={univ.id}
-                 univ={univ}
-                 isTracking={trackedSchools.includes(univ.id)}
-                 onToggleTrack={() => toggleTrack(univ.id)}
-                 onClick={() => setSelectedUniv(univ)}
-                 sizeLabel={getSchoolSizeLabel(univ.undergradSize)}
-               />
-             ))}
-          </div>
-        </section>
-
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-
-        {/* Section 2: My Shortlist (Only visible if there are tracked schools) */}
-        <section className="space-y-10">
-          <div className="flex justify-between items-end">
-            <div>
-              <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-900">
-                <Star className="text-amber-500 fill-amber-500" size={32} />
-                My Shortlist
-              </h2>
-              <p className="text-slate-500 mt-2">선택된 {trackedSchools.length}개 학교의 서류 마감 및 마일스톤을 관리합니다.</p>
-            </div>
-          </div>
-
-          {trackedSchools.length === 0 ? (
-            <div className="bg-white rounded-3xl border border-dashed border-slate-300 p-16 text-center shadow-sm">
-               <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
-                  <Star size={32} />
+        {activeTab === 'dashboard' && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
+               <div className="text-center md:text-left">
+                  <h2 className="text-3xl font-bold text-slate-900 tracking-tight">University Dashboard</h2>
+                  <p className="text-slate-500 mt-1">마스터 보드와 비주얼 정보를 하나로 통합한 대시보드입니다.</p>
                </div>
-               <h3 className="font-bold text-lg text-slate-400 uppercase tracking-widest">No Schools Tracked</h3>
-               <p className="text-slate-400 mt-2 text-sm italic">위 리스트에서 별표를 눌러 관심 대학을 추가해 보세요.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-               <div className="lg:col-span-2 space-y-4">
-                  {trackedSchools.map(id => {
-                     const u = UNIVERSITIES.find(u => u.id === id);
-                     return u ? (
-                       <div key={id} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group hover:border-indigo-200 transition-colors">
-                          <div className="flex-grow">
-                             <h3 className="font-bold text-lg text-slate-800">{u.name}</h3>
-                             <p className="text-xs text-slate-500 font-medium">{u.major}</p>
-                             <div className="flex gap-4 mt-3">
-                                <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-50 text-amber-700 rounded-md border border-amber-100">CSS: {u.deadlines.css}</span>
-                                <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100">Early: {u.deadlines.early}</span>
-                             </div>
-                          </div>
-                          <div className="flex gap-2 w-full md:w-auto">
-                             <TrackerStatus label="Common App" />
-                             <TrackerStatus label="CSS Profile" />
-                             <TrackerStatus label="Essays" />
-                             <button 
-                               onClick={() => toggleTrack(id)}
-                               className="p-2.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                             >
-                               <Trash2 size={18} />
-                             </button>
-                          </div>
-                       </div>
-                     ) : null;
-                  })}
-               </div>
-
-               <div className="space-y-6">
-                  <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-                     <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                       <ClipboardList size={20} className="text-indigo-600" />
-                       공통 마일스톤
-                     </h3>
-                     <div className="space-y-4">
-                        <CheckItem label="추천서 선생님 컨택 완료" />
-                        <CheckItem label="SAT/ACT 점수 리포팅" />
-                        <CheckItem label="은행 잔고 증명서(ISFS) 준비" />
-                        <CheckItem label="포트폴리오 최종 업로드" />
-                     </div>
-                  </div>
+               <div className="relative w-full max-w-md">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                  <input 
+                    type="text" 
+                    placeholder="학교명, 전공, 지역 검색..."
+                    className="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
                </div>
             </div>
-          )}
-        </section>
 
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-
-        {/* Section 3: Prep Guide */}
-        <section className="space-y-10 pb-20">
-          <div>
-            <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-900">
-              <Lightbulb className="text-indigo-600" size={32} />
-              Prep Strategy Guide
-            </h2>
-            <p className="text-slate-500 mt-2">성공적인 미국 입시를 위한 핵심 체크포인트입니다.</p>
+            <div className="grid grid-cols-1 gap-6">
+               {filteredUniversities.map((univ) => (
+                 <UnifiedUniversityCard 
+                   key={univ.id}
+                   univ={univ}
+                   isTracking={trackedSchools.includes(univ.id)}
+                   onToggleTrack={() => toggleTrack(univ.id)}
+                   onClick={() => setSelectedUniv(univ)}
+                   sizeLabel={getSchoolSizeLabel(univ.undergradSize)}
+                 />
+               ))}
+            </div>
           </div>
+        )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <GuideSection 
-              icon={<BookOpen className="text-indigo-600" />}
-              title="Academic Excellence"
-              items={[
-                { title: "Essential APs", content: "금융/STEM 필수: Calculus BC, Statistics, Macro/Micro Economics, Computer Science A" },
-                { title: "GPA & Rigor", content: "용인외대부고 커리큘럼 내에서 가장 난이도 높은 수학/과학 수업 이수 권장" },
-                { title: "Test Optional?", content: "최상위권(MIT 등)은 SAT/ACT 점수를 강력히 요구하는 추세로 복귀 중" }
-              ]}
-            />
-            <GuideSection 
-              icon={<Trophy className="text-amber-500" />}
-              title="Extracurricular Strategy"
-              items={[
-                { title: "Math Competitions", content: "AMC 10/12 성적 및 AIME 진출 여부는 Quant 경로에서 매우 강력한 신호" },
-                { title: "Finance Projects", content: "Wharton Investment Competition 참여 또는 주식/데이터 분석 블로그 운영" },
-                { title: "Leadership", content: "교내 경제/수학 동아리 장 또는 관련 컨퍼런스 기획 경험" }
-              ]}
-            />
-            <GuideSection 
-              icon={<BarChart3 className="text-emerald-600" />}
-              title="Financial Aid Strategy"
-              items={[
-                { title: "Need-Blind vs Aware", content: "유학생에게 Need-blind인 학교(Harvard, MIT 등)는 FA 신청이 합격에 영향 없음" },
-                { title: "Asset Documentation", content: "CSS Profile 작성 시 부모님 소득 및 자산 증빙 서류의 영문 번역 미리 준비" },
-                { title: "Private Scholarships", content: "대학 자체 지원금 외에 외부 재단 장학금(관정 등) 기회 탐색" }
-              ]}
-            />
-            <GuideSection 
-              icon={<AlertCircle className="text-rose-500" />}
-              title="Application Final Check"
-              items={[
-                { title: "Why Major Essay", content: "수학적 호기심이 어떻게 금융적 문제 해결로 이어졌는지 구체적 사례 제시" },
-                { title: "Timezone Management", content: "한국 시간과 미국 동부(EST) 마감 시간 차이로 인한 실수 주의 (앱 상단 시계 활용)" },
-                { title: "Interview Prep", content: "Alumni 인터뷰 시 전공 관련 시사 상식 및 본인의 열정 전달 연습" }
-              ]}
-            />
+        {activeTab === 'my-list' && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+             <div className="mb-4">
+                <h2 className="text-2xl font-bold flex items-center gap-2 text-slate-800">
+                   <Star className="text-amber-500 fill-amber-500" />
+                   나의 관심 대학 리스트
+                </h2>
+                <p className="text-sm text-slate-500">별표 표시한 {trackedSchools.length}개 학교의 주요 마감 정보를 관리합니다.</p>
+             </div>
+
+             {trackedSchools.length === 0 ? (
+                <div className="bg-white rounded-3xl border border-slate-200 p-16 text-center shadow-sm">
+                   <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                      <Star size={32} />
+                   </div>
+                   <h3 className="font-bold text-lg text-slate-900 tracking-tight">찜한 학교가 없습니다.</h3>
+                   <p className="text-slate-500 mt-2 text-sm">Dashboard 탭에서 관심 있는 학교를 추가해 보세요!</p>
+                   <button 
+                     onClick={() => setActiveTab('dashboard')}
+                     className="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg"
+                   >
+                     학교 리스트 보기
+                   </button>
+                </div>
+             ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                   <div className="lg:col-span-2 space-y-4">
+                      {trackedSchools.map(id => {
+                         const u = UNIVERSITIES.find(u => u.id === id);
+                         return u ? (
+                           <div key={id} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group hover:border-indigo-200 transition-colors">
+                              <div className="flex-grow">
+                                 <h3 className="font-bold text-lg text-slate-800">{u.name}</h3>
+                                 <p className="text-xs text-slate-500 font-medium">{u.major}</p>
+                                 <div className="flex gap-4 mt-3">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-50 text-amber-700 rounded-md border border-amber-100">CSS: {u.deadlines.css}</span>
+                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100">Early: {u.deadlines.early}</span>
+                                 </div>
+                              </div>
+                              <div className="flex gap-2 w-full md:w-auto">
+                                 <TrackerStatus label="Common App" />
+                                 <TrackerStatus label="CSS Profile" />
+                                 <TrackerStatus label="Essays" />
+                                 <button 
+                                   onClick={() => toggleTrack(id)}
+                                   className="p-2.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                 >
+                                   <Trash2 size={18} />
+                                 </button>
+                              </div>
+                           </div>
+                         ) : null;
+                      })}
+                   </div>
+
+                   <div className="space-y-6">
+                      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+                         <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+                           <ClipboardList size={20} className="text-indigo-600" />
+                           공통 마일스톤
+                         </h3>
+                         <div className="space-y-4">
+                            <CheckItem label="추천서 선생님 컨택 완료" />
+                            <CheckItem label="SAT/ACT 점수 리포팅" />
+                            <CheckItem label="은행 잔고 증명서(ISFS) 준비" />
+                            <CheckItem label="포트폴리오 최종 업로드" />
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             )}
           </div>
-        </section>
+        )}
+
+        {activeTab === 'guide' && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+             <div className="mb-4">
+                <h2 className="text-2xl font-bold flex items-center gap-2 text-slate-800">
+                   <Lightbulb className="text-indigo-600" />
+                   합격 준비 전략 가이드
+                </h2>
+                <p className="text-sm text-slate-500">전공 및 대학별 준비를 위한 핵심 전략입니다.</p>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <GuideSection 
+                  icon={<BookOpen className="text-indigo-600" />}
+                  title="Academic Excellence"
+                  items={[
+                    { title: "Essential APs", content: "금융/STEM 필수: Calculus BC, Statistics, Macro/Micro Economics, Computer Science A" },
+                    { title: "GPA & Rigor", content: "용인외대부고 커리큘럼 내에서 가장 난이도 높은 수학/과학 수업 이수 권장" },
+                    { title: "Test Optional?", content: "최상위권(MIT 등)은 SAT/ACT 점수를 강력히 요구하는 추세로 복귀 중" }
+                  ]}
+                />
+                <GuideSection 
+                  icon={<Trophy className="text-amber-500" />}
+                  title="Extracurricular Strategy"
+                  items={[
+                    { title: "Math Competitions", content: "AMC 10/12 성적 및 AIME 진출 여부는 Quant 경로에서 매우 강력한 신호" },
+                    { title: "Finance Projects", content: "Wharton Investment Competition 참여 또는 주식/데이터 분석 블로그 운영" },
+                    { title: "Leadership", content: "교내 경제/수학 동아리 장 또는 관련 컨퍼런스 기획 경험" }
+                  ]}
+                />
+                <GuideSection 
+                  icon={<BarChart3 className="text-emerald-600" />}
+                  title="Financial Aid Strategy"
+                  items={[
+                    { title: "Need-Blind vs Aware", content: "유학생에게 Need-blind인 학교(Harvard, MIT 등)는 FA 신청이 합격에 영향 없음" },
+                    { title: "Asset Documentation", content: "CSS Profile 작성 시 부모님 소득 및 자산 증빙 서류의 영문 번역 미리 준비" },
+                    { title: "Private Scholarships", content: "대학 자체 지원금 외에 외부 재단 장학금(관정 등) 기회 탐색" }
+                  ]}
+                />
+                <GuideSection 
+                  icon={<AlertCircle className="text-rose-500" />}
+                  title="Application Final Check"
+                  items={[
+                    { title: "Why Major Essay", content: "수학적 호기심이 어떻게 금융적 문제 해결로 이어졌는지 구체적 사례 제시" },
+                    { title: "Timezone Management", content: "한국 시간과 미국 동부(EST) 마감 시간 차이로 인한 실수 주의 (앱 상단 시계 활용)" },
+                    { title: "Interview Prep", content: "Alumni 인터뷰 시 전공 관련 시사 상식 및 본인의 열정 전달 연습" }
+                  ]}
+                />
+             </div>
+          </div>
+        )}
       </main>
 
       {/* Detail Modal */}
@@ -545,12 +567,28 @@ function TimeDisplay({ label, time, status, color = 'slate' }: { label: string, 
   );
 }
 
+function TabButton({ active, label, icon, onClick }: { active: boolean, label: string, icon: React.ReactNode, onClick: () => void }) {
+  return (
+    <button 
+      onClick={onClick}
+      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
+        active 
+          ? 'bg-white text-indigo-600 shadow-sm shadow-indigo-100 border border-slate-200' 
+          : 'text-slate-500 hover:text-slate-700'
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
+
 function DetailCap({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) {
   return (
     <div className="flex flex-col items-center text-center p-2">
       <div className="text-slate-400 mb-1">{icon}</div>
       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{label}</span>
-      <span className="text-[11px] font-bold text-slate-700 leading-tight">{value}</span>
+      <span className="text-11px font-bold text-slate-700 leading-tight">{value}</span>
     </div>
   );
 }
