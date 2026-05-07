@@ -27,9 +27,28 @@ import {
   Compass,
   LayoutGrid,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Coins
 } from 'lucide-react';
 import { UNIVERSITIES, University } from './types';
+
+// 환율 설정 (예: 1달러 = 1,350원)
+const EXCHANGE_RATE = 1350;
+
+// Currency Utility
+const formatKRW = (usdString: string) => {
+  const usd = parseInt(usdString.replace(/[^0-9]/g, ''));
+  const krw = usd * EXCHANGE_RATE;
+  
+  if (krw >= 100000000) {
+    const eok = Math.floor(krw / 100000000);
+    const man = Math.floor((krw % 100000000) / 10000);
+    return `약 ${eok}억 ${man > 0 ? man + '만' : ''}원`;
+  } else {
+    const man = Math.floor(krw / 10000);
+    return `약 ${man}만원`;
+  }
+};
 
 // Timezone Utility
 const useCurrentTime = () => {
@@ -133,7 +152,7 @@ export default function Home() {
       </div>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Tab Switcher (Optimized to 3 Tabs) */}
+        {/* Tab Switcher */}
         <div className="flex bg-slate-100/80 backdrop-blur-sm p-1.5 rounded-2xl w-fit mb-10 border border-slate-200 shadow-sm">
           <TabButton 
             active={activeTab === 'dashboard'} 
@@ -160,7 +179,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
                <div className="text-center md:text-left">
                   <h2 className="text-3xl font-bold text-slate-900 tracking-tight">University Dashboard</h2>
-                  <p className="text-slate-500 mt-1">마스터 보드와 비주얼 정보를 하나로 통합한 대시보드입니다.</p>
+                  <p className="text-slate-500 mt-1">25개 타겟 대학의 상세 정보와 예상 COA를 확인하세요.</p>
                </div>
                <div className="relative w-full max-w-md">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
@@ -206,12 +225,6 @@ export default function Home() {
                    </div>
                    <h3 className="font-bold text-lg text-slate-900 tracking-tight">찜한 학교가 없습니다.</h3>
                    <p className="text-slate-500 mt-2 text-sm">Dashboard 탭에서 관심 있는 학교를 추가해 보세요!</p>
-                   <button 
-                     onClick={() => setActiveTab('dashboard')}
-                     className="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg"
-                   >
-                     학교 리스트 보기
-                   </button>
                 </div>
              ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -353,8 +366,14 @@ export default function Home() {
                     <p className="font-bold text-xl text-slate-800 leading-tight">{selectedUniv.major}</p>
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Estimated COA</h4>
-                    <p className="font-bold text-xl text-indigo-600">{selectedUniv.coa} <span className="text-sm font-normal text-slate-500">/ yr</span></p>
+                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Estimated COA (1년)</h4>
+                    <div className="flex flex-col">
+                       <p className="font-bold text-2xl text-indigo-600">{selectedUniv.coa}</p>
+                       <p className="text-sm font-bold text-emerald-600 mt-1 flex items-center gap-1">
+                          <Coins size={14} />
+                          {formatKRW(selectedUniv.coa)} <span className="text-[10px] font-normal opacity-70">(환율 1,350원 기준)</span>
+                       </p>
+                    </div>
                   </div>
                 </div>
 
@@ -440,10 +459,17 @@ function UnifiedUniversityCard({ univ, isTracking, onToggleTrack, onClick, sizeL
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{univ.location}</span>
                </div>
                <h3 className="text-2xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{univ.name}</h3>
-               <p className="text-sm font-medium text-slate-500 flex items-center gap-1.5 mt-1">
-                  <GraduationCap size={16} className="text-indigo-400" />
-                  {univ.major}
-               </p>
+               <div className="flex items-center gap-3 mt-1">
+                  <p className="text-sm font-bold text-indigo-400 flex items-center gap-1.5">
+                     <GraduationCap size={16} />
+                     {univ.major}
+                  </p>
+                  <div className="h-3 w-px bg-slate-200" />
+                  <p className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                     <Coins size={14} />
+                     {univ.coa} <span className="text-[10px] font-normal opacity-60">({formatKRW(univ.coa)})</span>
+                  </p>
+               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -588,7 +614,7 @@ function DetailCap({ icon, label, value }: { icon: React.ReactNode, label: strin
     <div className="flex flex-col items-center text-center p-2">
       <div className="text-slate-400 mb-1">{icon}</div>
       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{label}</span>
-      <span className="text-11px font-bold text-slate-700 leading-tight">{value}</span>
+      <span className="text-[11px] font-bold text-slate-700 leading-tight">{value}</span>
     </div>
   );
 }
