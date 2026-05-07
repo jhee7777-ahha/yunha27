@@ -30,7 +30,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$85,900",
     type: "사립",
     traits: "최상위권 공대, FA 매우 강력, 퀀트/핀테크 최적",
-    image: "https://images.unsplash.com/photo-1595113316349-9fa4eb24f884?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/mit.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/01", css: "02/15" }
   },
@@ -45,7 +45,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$82,000",
     type: "사립",
     traits: "이론+네트워크 최강, 글로벌 인맥, FA 강력",
-    image: "https://images.unsplash.com/photo-1581362072978-14998d01fdaa?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/harvard.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/01", css: "02/01" }
   },
@@ -60,7 +60,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$86,000",
     type: "사립",
     traits: "물리/수학 기반 최적, 퀀트 리서치 최강",
-    image: "https://images.unsplash.com/photo-1563811771046-ba984ff30900?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/princeton.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/01", css: "02/01" }
   },
@@ -75,7 +75,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$84,000",
     type: "사립",
     traits: "균형 잡힌 교육, 강력한 FA 보조, 리서치 중심",
-    image: "https://images.unsplash.com/photo-1603565259160-5a4628f80455?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/yale.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/02", css: "02/01" }
   },
@@ -90,7 +90,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$90,000",
     type: "사립",
     traits: "뉴욕 위치적 이점, 월스트리트 인턴십 최적",
-    image: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/columbia.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/01", css: "02/15" }
   },
@@ -105,7 +105,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$85,000",
     type: "사립",
     traits: "비즈니스 스쿨 1위, 금융권 파워 네트워킹",
-    image: "https://images.unsplash.com/photo-1579389083078-4e7018379f7e?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/upenn.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/05", css: "02/01" }
   },
@@ -120,7 +120,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$88,000",
     type: "사립",
     traits: "학구적 분위기, 경제학 학파 본산, 퀀트 선호",
-    image: "https://images.unsplash.com/photo-1569437061241-a848be43cc82?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/uchicago.png",
     timeZone: "America/Chicago",
     deadlines: { early: "11/01", regular: "01/04", css: "02/01" }
   },
@@ -135,7 +135,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$87,000",
     type: "사립",
     traits: "혁신/창업 정신, 테크+금융 융합 최강",
-    image: "https://images.unsplash.com/photo-1512418490979-92798ccc1340?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/stanford.png",
     timeZone: "America/Los_Angeles",
     deadlines: { early: "11/01", regular: "01/05", css: "02/15" }
   },
@@ -150,7 +150,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$83,000",
     type: "사립",
     traits: "실무 중심 교육, 광범위한 동문 네트워크",
-    image: "https://images.unsplash.com/photo-1606132801931-6e3e57630713?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/cornell.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/02", css: "02/15" }
   },
@@ -165,7 +165,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$89,000",
     type: "사립",
     traits: "맨해튼 심장부, 월가 인턴십의 성지",
-    image: "https://images.unsplash.com/photo-1533606553820-c2609095655c?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/nyu.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/01", css: "02/15" }
   },
@@ -180,7 +180,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$82,000",
     type: "사립",
     traits: "컴퓨팅 파워 최강, 퀀트 트레이딩 선호 1위",
-    image: "https://images.unsplash.com/photo-1524275539700-cf51138f679b?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/cmu.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/01", css: "02/15" }
   },
@@ -195,7 +195,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$84,000",
     type: "사립",
     traits: "소수 정예, 연구 역량 최상, 수학적 깊이",
-    image: "https://images.unsplash.com/photo-1565020166664-d62f6b80148f?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/caltech.png",
     timeZone: "America/Los_Angeles",
     deadlines: { early: "11/01", regular: "01/03", css: "01/15" }
   },
@@ -210,7 +210,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$85,000",
     type: "사립",
     traits: "강력한 동문 결속력, 남부의 하버드",
-    image: "https://images.unsplash.com/photo-1629215099368-45e03233633d?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/duke.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/02", css: "02/01" }
   },
@@ -225,7 +225,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$83,000",
     type: "사립",
     traits: "작지만 강력한 공동체, 학부 교육 중심",
-    image: "https://images.unsplash.com/photo-1612450371424-00127f804369?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/dartmouth.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/02", css: "02/01" }
   },
@@ -240,7 +240,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$86,000",
     type: "사립",
     traits: "유연한 학제(Open Curriculum), 창의적 인재 선호",
-    image: "https://images.unsplash.com/photo-1583373834257-a27909384772?auto=format&fit=crop&q=80&w=1200",
+    image: "/univ-images/brown.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/05", css: "02/01" }
   }
