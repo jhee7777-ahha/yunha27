@@ -285,7 +285,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$89,000",
     type: "사립",
     traits: "MMSS 프로그램의 수학적 엄밀함, 시카고 금융권 강세",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1606132801931-6e3e57630713?w=1200",
+    image: "/univ-images/northwestern.png",
     timeZone: "America/Chicago",
     deadlines: { early: "11/01", regular: "01/02", css: "02/01" }
   },
@@ -300,7 +300,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$76,000",
     type: "공립",
     traits: "강력한 수학적 기초, 전미 최대 규모 동문 네트워킹",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1583373834257-a27909384772?w=1200",
+    image: "/univ-images/umich.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "02/01", css: "02/01" }
   },
@@ -315,7 +315,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$62,000",
     type: "공립",
     traits: "물리학과 비즈니스의 조화, 텍사스 금융 허브",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1603565259160-5a4628f80455?w=1200",
+    image: "/univ-images/utaustin.png",
     timeZone: "America/Chicago",
     deadlines: { early: "11/01", regular: "12/01", css: "01/15" }
   },
@@ -330,7 +330,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$86,000",
     type: "사립",
     traits: "연구 중심 환경, 통계학 분야 전미 최상위권",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1579389083078-4e7018379f7e?w=1200",
+    image: "/univ-images/jhu.png",
     timeZone: "America/New_York",
     deadlines: { early: "11/01", regular: "01/02", css: "02/01" }
   },
@@ -345,7 +345,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$78,000",
     type: "사립",
     traits: "소규모 정예 수업, 남부의 라이스(Gothic 스타일)",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1569437061241-a848be43cc82?w=1200",
+    image: "/univ-images/rice.png",
     timeZone: "America/Chicago",
     deadlines: { early: "11/01", regular: "01/01", css: "02/01" }
   },
@@ -360,7 +360,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$90,000",
     type: "사립",
     traits: "학부 중심 최고 수준 공과대학, 퀀트 사관학교",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1512418490979-92798ccc1340?w=1200",
+    image: "/univ-images/hmc.png",
     timeZone: "America/Los_Angeles",
     deadlines: { early: "11/15", regular: "01/05", css: "02/01" }
   },
@@ -375,7 +375,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$88,000",
     type: "사립",
     traits: "강력한 파이낸스 커뮤니티, 균형 잡힌 대학 생활",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1533606553820-c2609095655c?w=1200",
+    image: "/univ-images/vanderbilt.png",
     timeZone: "America/Chicago",
     deadlines: { early: "11/01", regular: "01/01", css: "02/01" }
   },
@@ -390,7 +390,7 @@ export const UNIVERSITIES: University[] = [
     coa: "$86,000",
     type: "사립",
     traits: "비즈니스 스쿨 내 퀀트 트랙 강세, 최상의 시설",
-    image: "https://images.weserv.nl/?url=https://images.unsplash.com/photo-1524275539700-cf51138f679b?w=1200",
+    image: "/univ-images/washu.png",
     timeZone: "America/Chicago",
     deadlines: { early: "11/01", regular: "01/02", css: "02/01" }
   }
