@@ -8,23 +8,15 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Plus, 
   MapPin, 
   DollarSign, 
   GraduationCap, 
   Clock, 
-  CheckCircle2, 
-  Circle, 
   Search, 
-  Filter,
   Users,
   Building2,
-  ExternalLink,
   ChevronRight,
   TrendingUp,
-  Calendar,
-  AlertCircle,
-  LayoutDashboard,
   ClipboardList,
   Star,
   Trash2,
@@ -32,7 +24,8 @@ import {
   Trophy,
   BarChart3,
   Lightbulb,
-  Compass
+  Compass,
+  LayoutGrid
 } from 'lucide-react';
 import { UNIVERSITIES, University } from './types';
 
@@ -78,13 +71,12 @@ const useCurrentTime = () => {
 
 export default function Home() {
   const times = useCurrentTime();
-  const [activeTab, setActiveTab] = useState<'master' | 'explorer' | 'my-list' | 'guide'>('master');
+  const [activeTab, setActiveTab] = useState<'board' | 'my-list' | 'guide'>('board');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUniv, setSelectedUniv] = useState<University | null>(null);
   const [trackedSchools, setTrackedSchools] = useState<string[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Set isMounted to true after first render
   useEffect(() => {
     setIsMounted(true);
     const saved = localStorage.getItem('tracked_schools');
@@ -105,7 +97,7 @@ export default function Home() {
     u.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getSchoolSize = (size: number) => {
+  const getSchoolSizeLabel = (size: number) => {
     if (size < 5000) return "Small (소규모)";
     if (size < 10000) return "Medium (중규모)";
     return "Large (대규모)";
@@ -116,9 +108,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Upper Navigation / Time Bar */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('master')}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('board')}>
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
               <TrendingUp size={24} />
             </div>
@@ -139,19 +131,13 @@ export default function Home() {
       </div>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Unified Tab Switcher */}
-        <div className="flex bg-slate-100/80 backdrop-blur-sm p-1.5 rounded-2xl w-fit mb-8 border border-slate-200 shadow-sm overflow-x-auto scrollbar-hide max-w-full">
+        {/* Tab Switcher */}
+        <div className="flex bg-slate-100/80 backdrop-blur-sm p-1.5 rounded-2xl w-fit mb-8 border border-slate-200 shadow-sm">
           <TabButton 
-            active={activeTab === 'master'} 
-            onClick={() => setActiveTab('master')}
-            label="Master Board"
-            icon={<LayoutDashboard size={18} />}
-          />
-          <TabButton 
-            active={activeTab === 'explorer'} 
-            onClick={() => setActiveTab('explorer')}
-            label="Visual Explorer"
-            icon={<Search size={18} />}
+            active={activeTab === 'board'} 
+            onClick={() => setActiveTab('board')}
+            label="Master Dashboard"
+            icon={<LayoutGrid size={18} />}
           />
           <TabButton 
             active={activeTab === 'my-list'} 
@@ -167,100 +153,37 @@ export default function Home() {
           />
         </div>
 
-        {activeTab === 'master' && (
+        {activeTab === 'board' && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[1100px]">
-                <thead>
-                  <tr className="bg-slate-50/50 border-b border-slate-200">
-                    <th className="px-6 py-5 font-bold text-[11px] text-slate-400 uppercase tracking-widest">University & Major</th>
-                    <th className="px-6 py-5 font-bold text-[11px] text-slate-400 uppercase tracking-widest text-center">Deadlines (E / R)</th>
-                    <th className="px-6 py-5 font-bold text-[11px] text-slate-400 uppercase tracking-widest">Campus Profile & Fit</th>
-                    <th className="px-6 py-5 font-bold text-[11px] text-slate-400 uppercase tracking-widest">Strategy & Insight</th>
-                    <th className="px-6 py-5"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {UNIVERSITIES.map(u => (
-                    <tr key={u.id} className="group hover:bg-indigo-50/30 transition-all duration-200">
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-1.5 h-10 rounded-full ${trackedSchools.includes(u.id) ? 'bg-indigo-500 shadow-sm shadow-indigo-200' : 'bg-slate-200'}`} />
-                          <div>
-                            <div className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{u.name}</div>
-                            <div className="text-[11px] text-slate-500 font-medium">{u.major}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex flex-col items-center gap-1.5">
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100 whitespace-nowrap">
-                            E: {u.deadlines.early}
-                          </span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md whitespace-nowrap">
-                            R: {u.deadlines.regular}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="space-y-1.5">
-                          <div className="flex items-center gap-2">
-                             <span className="text-[10px] font-bold text-slate-400 uppercase">Size:</span>
-                             <span className="text-xs font-semibold text-slate-700">{getSchoolSize(u.undergradSize)}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                             <span className="text-[10px] font-bold text-slate-400 uppercase">Type:</span>
-                             <span className="text-xs font-semibold text-slate-600">{u.type} / {u.location.split(',')[1] || u.location}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="space-y-2">
-                           <div className={`text-[10px] font-bold inline-block px-2 py-0.5 rounded-full ${u.faRequest.includes('불리') ? 'text-orange-500 bg-orange-50' : 'text-emerald-600 bg-emerald-50'}`}>
-                              FA: {u.faRequest}
-                           </div>
-                           <p className="text-xs text-slate-600 font-medium leading-relaxed max-w-xs">{u.traits}</p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5 text-right">
-                        <button 
-                          onClick={() => toggleTrack(u.id)}
-                          className={`p-2 rounded-full transition-all ${trackedSchools.includes(u.id) ? 'bg-indigo-100 text-indigo-600' : 'text-slate-300 hover:text-slate-500'}`}
-                        >
-                          <Star size={18} fill={trackedSchools.includes(u.id) ? "currentColor" : "none"} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'explorer' && (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="relative max-w-xl mx-auto mb-10">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-              <input 
-                type="text" 
-                placeholder="대학교, 전공, 지역 검색..."
-                className="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all text-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            {/* Unified Search & Header */}
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
+               <div className="text-center md:text-left">
+                  <h2 className="text-3xl font-bold text-slate-900 tracking-tight">University Board</h2>
+                  <p className="text-slate-500 mt-1">15개 타겟 대학의 통합 정보를 한눈에 비교하고 관리하세요.</p>
+               </div>
+               <div className="relative w-full max-w-md">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                  <input 
+                    type="text" 
+                    placeholder="학교명, 전공, 지역 검색..."
+                    className="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredUniversities.map((univ) => (
-                <UniversityCard 
-                  key={univ.id}
-                  univ={univ} 
-                  isTracking={trackedSchools.includes(univ.id)}
-                  onToggleTrack={() => toggleTrack(univ.id)}
-                  onClick={() => setSelectedUniv(univ)}
-                />
-              ))}
+            <div className="grid grid-cols-1 gap-6">
+               {filteredUniversities.map((univ) => (
+                 <UnifiedUniversityCard 
+                   key={univ.id}
+                   univ={univ}
+                   isTracking={trackedSchools.includes(univ.id)}
+                   onToggleTrack={() => toggleTrack(univ.id)}
+                   onClick={() => setSelectedUniv(univ)}
+                   sizeLabel={getSchoolSizeLabel(univ.undergradSize)}
+                 />
+               ))}
             </div>
           </div>
         )}
@@ -283,9 +206,9 @@ export default function Home() {
                       <Star size={32} />
                    </div>
                    <h3 className="font-bold text-lg text-slate-900">찜한 학교가 없습니다.</h3>
-                   <p className="text-slate-500 mt-2 text-sm">Master Board나 Explorer에서 관심 있는 학교를 추가해 보세요!</p>
+                   <p className="text-slate-500 mt-2 text-sm">Dashboard에서 관심 있는 학교를 추가해 보세요!</p>
                    <button 
-                     onClick={() => setActiveTab('master')}
+                     onClick={() => setActiveTab('board')}
                      className="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
                    >
                      학교 둘러보기
@@ -403,16 +326,16 @@ export default function Home() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
             >
-              <div className="h-48 relative overflow-hidden">
+              <div className="h-56 relative overflow-hidden">
                 <img 
                   src={selectedUniv.image} 
                   alt={selectedUniv.name} 
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent flex items-end p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent flex items-end p-8">
                   <div className="text-white">
-                    <h2 className="text-3xl font-bold">{selectedUniv.name}</h2>
-                    <p className="flex items-center gap-1 text-indigo-100 opacity-90 text-sm"><MapPin size={14}/> {selectedUniv.location}</p>
+                    <h2 className="text-4xl font-bold tracking-tight">{selectedUniv.name}</h2>
+                    <p className="flex items-center gap-1 text-indigo-100 opacity-90 mt-1"><MapPin size={16}/> {selectedUniv.location}</p>
                   </div>
                 </div>
               </div>
@@ -421,11 +344,11 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-8">
                   <div>
                     <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">추천 전공</h4>
-                    <p className="font-semibold text-lg leading-tight">{selectedUniv.major}</p>
+                    <p className="font-bold text-xl text-slate-800 leading-tight">{selectedUniv.major}</p>
                   </div>
                   <div>
                     <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Estimated COA</h4>
-                    <p className="font-semibold text-lg text-indigo-600">{selectedUniv.coa} <span className="text-sm font-normal text-slate-500">/ yr</span></p>
+                    <p className="font-bold text-xl text-indigo-600">{selectedUniv.coa} <span className="text-sm font-normal text-slate-500">/ yr</span></p>
                   </div>
                 </div>
 
@@ -442,22 +365,22 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="font-bold border-b border-slate-200 pb-2">지원 및 취업 조건</h4>
+                  <h4 className="font-bold border-b border-slate-200 pb-2 text-slate-800">지원 및 취업 조건</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 bg-white border border-slate-200 rounded-xl">
                       <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">유학생 취업 & STEM</p>
-                      <p className="font-medium text-sm leading-relaxed">{selectedUniv.employmentStrength}</p>
+                      <p className="font-semibold text-sm leading-relaxed text-slate-700">{selectedUniv.employmentStrength}</p>
                     </div>
                     <div className="p-4 bg-white border border-slate-200 rounded-xl">
                       <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">FA 신청 가이드</p>
-                      <p className="font-medium text-sm leading-relaxed">{selectedUniv.faRequest}</p>
+                      <p className="font-semibold text-sm leading-relaxed text-slate-700">{selectedUniv.faRequest}</p>
                     </div>
                   </div>
                 </div>
 
                 <button 
                   onClick={() => setSelectedUniv(null)}
-                  className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition-colors"
+                  className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition-all shadow-lg"
                 >
                   Close Explorer
                 </button>
@@ -467,6 +390,100 @@ export default function Home() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function UnifiedUniversityCard({ univ, isTracking, onToggleTrack, onClick, sizeLabel }: { 
+  univ: University, 
+  isTracking: boolean, 
+  onToggleTrack: () => void, 
+  onClick: () => void,
+  sizeLabel: string 
+}) {
+  return (
+    <motion.div 
+      layoutId={univ.id}
+      className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col md:flex-row overflow-hidden"
+      onClick={onClick}
+    >
+      {/* Visual Part */}
+      <div className="md:w-64 h-48 md:h-auto relative overflow-hidden flex-shrink-0">
+        <img 
+          src={univ.image} 
+          alt={univ.name} 
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleTrack();
+          }}
+          className={`absolute top-4 left-4 p-2 rounded-full transition-all z-10 shadow-lg ${
+            isTracking ? 'bg-amber-500 text-white' : 'bg-white/90 text-slate-300 hover:text-amber-500'
+          }`}
+        >
+          <Star size={18} fill={isTracking ? "currentColor" : "none"} />
+        </button>
+      </div>
+
+      {/* Info Part */}
+      <div className="flex-grow p-6 md:p-8 flex flex-col md:flex-row gap-8">
+         <div className="flex-grow space-y-4">
+            <div>
+               <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full uppercase tracking-widest">{univ.type}</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{univ.location}</span>
+               </div>
+               <h3 className="text-2xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{univ.name}</h3>
+               <p className="text-sm font-medium text-slate-500 flex items-center gap-1.5 mt-1">
+                  <GraduationCap size={16} className="text-indigo-400" />
+                  {univ.major}
+               </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+               <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Campus Profile</span>
+                  <div className="flex items-center gap-2">
+                     <Users size={14} className="text-slate-400" />
+                     <span className="text-xs font-semibold text-slate-700">{sizeLabel}</span>
+                  </div>
+               </div>
+               <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Strategy Insight</span>
+                  <div className="flex items-center gap-2">
+                     <Compass size={14} className="text-slate-400" />
+                     <span className="text-xs font-semibold text-slate-700 truncate">{univ.traits.split(',')[0]}</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         {/* Deadlines & CTA */}
+         <div className="md:w-48 flex flex-col justify-between border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-8">
+            <div className="space-y-3">
+               <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-slate-400">Early</span>
+                  <span className="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">{univ.deadlines.early}</span>
+               </div>
+               <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-slate-400">Regular</span>
+                  <span className="font-bold text-slate-600 bg-slate-50 px-2 py-0.5 rounded-md">{univ.deadlines.regular}</span>
+               </div>
+               <div className={`text-[10px] font-bold text-center py-1 rounded-full mt-2 ${univ.faRequest.includes('불리') ? 'text-orange-500 bg-orange-50' : 'text-emerald-600 bg-emerald-50'}`}>
+                  FA: {univ.faRequest}
+               </div>
+            </div>
+            
+            <div className="mt-6 flex justify-end">
+               <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                  <ChevronRight size={20} />
+               </div>
+            </div>
+         </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -553,70 +570,13 @@ function TabButton({ active, label, icon, onClick }: { active: boolean, label: s
       onClick={onClick}
       className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
         active 
-          ? 'bg-white text-indigo-600 shadow-sm shadow-indigo-100' 
+          ? 'bg-white text-indigo-600 shadow-sm shadow-indigo-100 border border-slate-200' 
           : 'text-slate-500 hover:text-slate-700'
       }`}
     >
       {icon}
       {label}
     </button>
-  );
-}
-
-function UniversityCard({ univ, isTracking, onToggleTrack, onClick }: { univ: University, isTracking: boolean, onToggleTrack: () => void, onClick: () => void }) {
-  return (
-    <motion.div 
-      layoutId={univ.id}
-      className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer group relative flex flex-col overflow-hidden"
-      onClick={onClick}
-    >
-      <div className="h-40 relative overflow-hidden">
-        <img 
-          src={univ.image} 
-          alt={univ.name} 
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleTrack();
-          }}
-          className={`absolute top-3 right-3 p-2 rounded-full transition-all z-10 ${
-            isTracking ? 'bg-amber-500 text-white shadow-lg' : 'bg-white/20 backdrop-blur-md text-white hover:bg-white/40'
-          }`}
-        >
-          <Star size={16} fill={isTracking ? "currentColor" : "none"} />
-        </button>
-        <div className="absolute bottom-3 left-4 text-white">
-           <span className="text-[10px] uppercase font-bold tracking-widest opacity-80 block mb-0.5">
-             {univ.type} · {univ.location}
-           </span>
-           <h3 className="text-lg font-bold leading-tight">{univ.name}</h3>
-        </div>
-      </div>
-
-      <div className="p-5 flex-grow space-y-3">
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          <Compass size={14} className="text-slate-400" />
-          <span className="truncate text-xs font-medium">{univ.traits.split(',')[0]}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm font-bold text-indigo-600">
-          <DollarSign size={14} className="text-indigo-400" />
-          <span className="text-xs">{univ.coa} <span className="text-[10px] font-normal text-slate-400">/ yr</span></span>
-        </div>
-      </div>
-
-      <div className="px-5 pb-5 pt-3 border-t border-slate-50 flex justify-between items-center">
-        <div className="flex flex-col">
-           <span className="text-[10px] font-bold text-indigo-600 uppercase">Early: {univ.deadlines.early}</span>
-           <span className={`text-[10px] font-bold ${univ.faRequest.includes('불리') ? 'text-orange-500' : 'text-emerald-600'}`}>FA: {univ.faRequest}</span>
-        </div>
-        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-all">
-          <ChevronRight size={16} />
-        </div>
-      </div>
-    </motion.div>
   );
 }
 
