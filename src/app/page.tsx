@@ -82,9 +82,11 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUniv, setSelectedUniv] = useState<University | null>(null);
   const [trackedSchools, setTrackedSchools] = useState<string[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Load tracked schools from localStorage
+  // Set isMounted to true after first render
   useEffect(() => {
+    setIsMounted(true);
     const saved = localStorage.getItem('tracked_schools');
     if (saved) setTrackedSchools(JSON.parse(saved));
   }, []);
@@ -108,6 +110,8 @@ export default function Home() {
     if (size < 10000) return "Medium (중규모)";
     return "Large (대규모)";
   };
+
+  if (!isMounted) return <div className="min-h-screen bg-[#F8FAFC]" />;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
