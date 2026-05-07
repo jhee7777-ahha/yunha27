@@ -403,12 +403,20 @@ export default function Home() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
             >
-              <div className="h-32 bg-indigo-600 flex items-end p-8">
-                <div className="text-white">
-                  <h2 className="text-3xl font-bold">{selectedUniv.name}</h2>
-                  <p className="flex items-center gap-1 text-indigo-100 opacity-80"><MapPin size={16}/> {selectedUniv.location}</p>
+              <div className="h-48 relative overflow-hidden">
+                <img 
+                  src={selectedUniv.image} 
+                  alt={selectedUniv.name} 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent flex items-end p-8">
+                  <div className="text-white">
+                    <h2 className="text-3xl font-bold">{selectedUniv.name}</h2>
+                    <p className="flex items-center gap-1 text-indigo-100 opacity-90 text-sm"><MapPin size={14}/> {selectedUniv.location}</p>
+                  </div>
                 </div>
               </div>
+
               <div className="p-8 space-y-6">
                 <div className="grid grid-cols-2 gap-8">
                   <div>
@@ -559,45 +567,54 @@ function UniversityCard({ univ, isTracking, onToggleTrack, onClick }: { univ: Un
   return (
     <motion.div 
       layoutId={univ.id}
-      className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-all cursor-pointer group relative flex flex-col"
+      className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer group relative flex flex-col overflow-hidden"
       onClick={onClick}
     >
-      <button 
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleTrack();
-        }}
-        className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
-          isTracking ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-slate-100 text-slate-300'
-        }`}
-      >
-        <Star size={18} fill={isTracking ? "currentColor" : "none"} className={`transition-transform ${isTracking ? 'scale-110' : 'scale-100'}`} />
-      </button>
-
-      <div className="mb-4">
-        <span className="text-[10px] uppercase font-bold tracking-widest text-indigo-500 mb-1 block">
-          {univ.type} · {univ.location}
-        </span>
-        <h3 className="text-xl font-bold group-hover:text-indigo-600 transition-colors leading-tight text-slate-800">{univ.name}</h3>
+      <div className="h-40 relative overflow-hidden">
+        <img 
+          src={univ.image} 
+          alt={univ.name} 
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleTrack();
+          }}
+          className={`absolute top-3 right-3 p-2 rounded-full transition-all z-10 ${
+            isTracking ? 'bg-amber-500 text-white shadow-lg' : 'bg-white/20 backdrop-blur-md text-white hover:bg-white/40'
+          }`}
+        >
+          <Star size={16} fill={isTracking ? "currentColor" : "none"} />
+        </button>
+        <div className="absolute bottom-3 left-4 text-white">
+           <span className="text-[10px] uppercase font-bold tracking-widest opacity-80 block mb-0.5">
+             {univ.type} · {univ.location}
+           </span>
+           <h3 className="text-lg font-bold leading-tight">{univ.name}</h3>
+        </div>
       </div>
 
-      <div className="flex-grow space-y-3 mb-6">
+      <div className="p-5 flex-grow space-y-3">
         <div className="flex items-center gap-2 text-sm text-slate-500">
-          <Compass size={16} className="text-slate-400" />
-          <span className="truncate">{univ.traits.split(',')[0]}</span>
+          <Compass size={14} className="text-slate-400" />
+          <span className="truncate text-xs font-medium">{univ.traits.split(',')[0]}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm font-bold text-indigo-600/80">
-          <DollarSign size={16} className="text-indigo-400" />
-          <span>{univ.coa} <span className="text-[10px] font-normal text-slate-400">/ yr</span></span>
+        <div className="flex items-center gap-2 text-sm font-bold text-indigo-600">
+          <DollarSign size={14} className="text-indigo-400" />
+          <span className="text-xs">{univ.coa} <span className="text-[10px] font-normal text-slate-400">/ yr</span></span>
         </div>
       </div>
 
-      <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+      <div className="px-5 pb-5 pt-3 border-t border-slate-50 flex justify-between items-center">
         <div className="flex flex-col">
            <span className="text-[10px] font-bold text-indigo-600 uppercase">Early: {univ.deadlines.early}</span>
            <span className={`text-[10px] font-bold ${univ.faRequest.includes('불리') ? 'text-orange-500' : 'text-emerald-600'}`}>FA: {univ.faRequest}</span>
         </div>
-        <ChevronRight size={16} className="text-slate-200 group-hover:translate-x-1 group-hover:text-indigo-400 transition-all" />
+        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-all">
+          <ChevronRight size={16} />
+        </div>
       </div>
     </motion.div>
   );
