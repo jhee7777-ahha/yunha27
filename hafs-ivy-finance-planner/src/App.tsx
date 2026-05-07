@@ -32,7 +32,7 @@ import {
   Lightbulb,
   Compass
 } from 'lucide-react';
-import { UNIVERSITIES, University } from './types.ts';
+import { UNIVERSITIES, University } from './types';
 
 // Timezone Utility
 const useCurrentTime = () => {
