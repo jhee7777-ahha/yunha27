@@ -32,8 +32,8 @@ import {
 } from 'lucide-react';
 import { UNIVERSITIES, University } from './types';
 
-// 환율 설정 (예: 1달러 = 1,350원)
-const EXCHANGE_RATE = 1350;
+// 환율 설정 (2026-05-07 기준: 1,451.60원)
+const EXCHANGE_RATE = 1451.60;
 
 // Currency Utility
 const formatKRW = (usdString: string) => {
