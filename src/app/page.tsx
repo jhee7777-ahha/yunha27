@@ -59,11 +59,10 @@ const useCurrentTime = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const formatTIme = (date: Date, timeZone?: string) => {
+  const formatTime = (date: Date, timeZone?: string) => {
     return new Intl.DateTimeFormat('en-US', {
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
       hour12: true,
       timeZone: timeZone || 'Asia/Seoul',
     }).format(date);
@@ -78,10 +77,10 @@ const useCurrentTime = () => {
   };
 
   return {
-    kst: formatTIme(time),
-    est: formatTIme(time, 'America/New_York'),
-    cst: formatTIme(time, 'America/Chicago'),
-    pst: formatTIme(time, 'America/Los_Angeles'),
+    kst: formatTime(time),
+    est: formatTime(time, 'America/New_York'),
+    cst: formatTime(time, 'America/Chicago'),
+    pst: formatTime(time, 'America/Los_Angeles'),
     labels: {
       est: getDayLabel(time, 'America/New_York'),
       cst: getDayLabel(time, 'America/Chicago'),
